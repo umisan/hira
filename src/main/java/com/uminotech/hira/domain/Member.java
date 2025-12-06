@@ -1,37 +1,35 @@
 package com.uminotech.hira.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreUpdate;
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "members")
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
+
+@Table("members")
 public class Member {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column("name")
     private String name;
 
-    @Column(nullable = false)
+    @Column("color")
     private String color;
 
-    @Column(nullable = false)
+    @Column("active")
     private boolean active = true;
 
-    @Column(nullable = false)
-    private LocalDateTime createdAt;
+    @CreatedDate
+    @Column("created_at")
+    private LocalDateTime createdAt = LocalDateTime.now();
 
-    @Column(nullable = false)
-    private LocalDateTime updatedAt;
+    @LastModifiedDate
+    @Column("updated_at")
+    private LocalDateTime updatedAt = createdAt;
 
     public Member() {
     }
@@ -39,18 +37,6 @@ public class Member {
     public Member(String name, String color) {
         this.name = name;
         this.color = color;
-    }
-
-    @PrePersist
-    public void prePersist() {
-        LocalDateTime now = LocalDateTime.now();
-        this.createdAt = now;
-        this.updatedAt = now;
-    }
-
-    @PreUpdate
-    public void preUpdate() {
-        this.updatedAt = LocalDateTime.now();
     }
 
     public Long getId() {
@@ -85,7 +71,15 @@ public class Member {
         return createdAt;
     }
 
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
     public LocalDateTime getUpdatedAt() {
         return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }

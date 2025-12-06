@@ -1,57 +1,48 @@
 package com.uminotech.hira.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreUpdate;
-import jakarta.persistence.Table;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "tasks")
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
+
+@Table("tasks")
 public class Task {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column("title")
     private String title;
 
-    @Column(columnDefinition = "TEXT")
+    @Column("description")
     private String description;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column("priority")
     private TaskPriority priority = TaskPriority.MEDIUM;
 
-    @Column(nullable = false)
+    @Column("weight")
     private Integer weight = 1;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column("status")
     private TaskStatus status = TaskStatus.TODO;
 
+    @Column("due_date")
     private LocalDate dueDate;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "assignee_id")
-    private Member assignee;
+    @Column("assignee_id")
+    private Long assigneeId;
 
-    @Column(nullable = false)
-    private LocalDateTime createdAt;
+    @CreatedDate
+    @Column("created_at")
+    private LocalDateTime createdAt = LocalDateTime.now();
 
-    @Column(nullable = false)
-    private LocalDateTime updatedAt;
+    @LastModifiedDate
+    @Column("updated_at")
+    private LocalDateTime updatedAt = createdAt;
 
     public Task() {
     }
@@ -62,18 +53,6 @@ public class Task {
         this.priority = priority;
         this.weight = weight;
         this.status = status;
-    }
-
-    @PrePersist
-    public void prePersist() {
-        LocalDateTime now = LocalDateTime.now();
-        this.createdAt = now;
-        this.updatedAt = now;
-    }
-
-    @PreUpdate
-    public void preUpdate() {
-        this.updatedAt = LocalDateTime.now();
     }
 
     public Long getId() {
@@ -128,19 +107,27 @@ public class Task {
         this.dueDate = dueDate;
     }
 
-    public Member getAssignee() {
-        return assignee;
+    public Long getAssigneeId() {
+        return assigneeId;
     }
 
-    public void setAssignee(Member assignee) {
-        this.assignee = assignee;
+    public void setAssigneeId(Long assigneeId) {
+        this.assigneeId = assigneeId;
     }
 
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
     public LocalDateTime getUpdatedAt() {
         return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }

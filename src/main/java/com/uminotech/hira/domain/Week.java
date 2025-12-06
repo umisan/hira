@@ -1,28 +1,24 @@
 package com.uminotech.hira.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import java.time.LocalDate;
 
-@Entity
-@Table(name = "weeks")
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
+
+@Table("weeks")
 public class Week {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column("start_date")
     private LocalDate startDate;
 
-    @Column(nullable = false)
+    @Column("end_date")
     private LocalDate endDate;
 
-    @Column(nullable = false)
+    @Column("label")
     private String label;
 
     public Week() {

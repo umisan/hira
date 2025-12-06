@@ -1,62 +1,53 @@
 package com.uminotech.hira.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
 
-@Entity
-@Table(name = "week_tasks")
+@Table("week_tasks")
 public class WeekTask {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "week_id", nullable = false)
-    private Week week;
+    @Column("week_id")
+    private Long weekId;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "task_id", nullable = false)
-    private Task task;
+    @Column("task_id")
+    private Long taskId;
 
-    @Column(nullable = false)
+    @Column("carried_over")
     private boolean carriedOver = false;
 
+    @Column("planned_weight")
     private Integer plannedWeight;
 
     public WeekTask() {
     }
 
-    public WeekTask(Week week, Task task) {
-        this.week = week;
-        this.task = task;
+    public WeekTask(Long weekId, Long taskId) {
+        this.weekId = weekId;
+        this.taskId = taskId;
     }
 
     public Long getId() {
         return id;
     }
 
-    public Week getWeek() {
-        return week;
+    public Long getWeekId() {
+        return weekId;
     }
 
-    public void setWeek(Week week) {
-        this.week = week;
+    public void setWeekId(Long weekId) {
+        this.weekId = weekId;
     }
 
-    public Task getTask() {
-        return task;
+    public Long getTaskId() {
+        return taskId;
     }
 
-    public void setTask(Task task) {
-        this.task = task;
+    public void setTaskId(Long taskId) {
+        this.taskId = taskId;
     }
 
     public boolean isCarriedOver() {
