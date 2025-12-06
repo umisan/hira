@@ -1,3 +1,15 @@
 spring:
   application:
     name: hira
+  datasource:
+    url: jdbc:sqlite:./data/hira.db
+    driver-class-name: org.sqlite.JDBC
+    username: ""
+    password: ""
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.community.dialect.SQLiteDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
