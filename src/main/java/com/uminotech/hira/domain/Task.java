@@ -26,6 +26,17 @@ public record Task(
         this(null, title, description, priority, weight, status, null, null, null, null);
     }
 
+    public Task(
+            String title,
+            String description,
+            TaskPriority priority,
+            Integer weight,
+            TaskStatus status,
+            LocalDate dueDate,
+            Long assigneeId) {
+        this(null, title, description, priority, weight, status, dueDate, assigneeId, null, null);
+    }
+
     public Task {
         if (priority == null) {
             priority = TaskPriority.MEDIUM;
