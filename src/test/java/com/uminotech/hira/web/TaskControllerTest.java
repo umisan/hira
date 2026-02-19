@@ -1,6 +1,7 @@
 package com.uminotech.hira.web;
 
 import static org.hamcrest.Matchers.hasSize;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -25,6 +26,7 @@ import com.uminotech.hira.domain.TaskStatus;
 import com.uminotech.hira.task.MemberRepository;
 import com.uminotech.hira.task.TaskCreateCommand;
 import com.uminotech.hira.task.TaskService;
+import com.uminotech.hira.task.TaskUpdateCommand;
 
 class TaskControllerTest {
 
@@ -102,6 +104,50 @@ class TaskControllerTest {
                         .param("status", "DONE"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/tasks/15"));
+    }
+
+    @Test
+    void shouldShowTaskEditForm() throws Exception {
+        when(taskService.findById(99L)).thenReturn(task(99L));
+        when(memberRepository.findAllByActiveTrue()).thenReturn(List.of(new Member(1L, "alice", "#111111", true, null, null)));
+
+        mockMvc.perform(get("/tasks/99/edit"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("tasks/edit"))
+                .andExpect(model().attributeExists("form"))
+                .andExpect(model().attributeExists("statuses"));
+    }
+
+    @Test
+    void shouldUpdateTaskAndRedirectToDetail() throws Exception {
+        TaskUpdateCommand command = new TaskUpdateCommand(
+                "updated",
+                "updated-desc",
+                TaskPriority.HIGH,
+                4,
+                TaskStatus.IN_PROGRESS,
+                null,
+                1L);
+        when(taskService.update(15L, command)).thenReturn(task(15L));
+
+        mockMvc.perform(post("/tasks/15")
+                        .param("title", "updated")
+                        .param("description", "updated-desc")
+                        .param("priority", "HIGH")
+                        .param("weight", "4")
+                        .param("status", "IN_PROGRESS")
+                        .param("assigneeId", "1"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/tasks/15"));
+    }
+
+    @Test
+    void shouldDeleteTaskAndRedirectToList() throws Exception {
+        mockMvc.perform(post("/tasks/15/delete"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/tasks"));
+
+        verify(taskService).delete(15L);
     }
 
     private static Task task(Long id) {

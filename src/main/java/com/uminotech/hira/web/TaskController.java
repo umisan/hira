@@ -64,10 +64,31 @@ public class TaskController {
         return "tasks/detail";
     }
 
+    @GetMapping("/{id}/edit")
+    public String editForm(@PathVariable Long id, Model model) {
+        model.addAttribute("form", TaskEditForm.from(taskService.findById(id)));
+        model.addAttribute("members", memberRepository.findAllByActiveTrue());
+        model.addAttribute("statuses", TaskStatus.values());
+        model.addAttribute("taskId", id);
+        return "tasks/edit";
+    }
+
+    @PostMapping("/{id}")
+    public String update(@PathVariable Long id, @Valid @ModelAttribute("form") TaskEditForm form) {
+        taskService.update(id, form.toCommand());
+        return "redirect:/tasks/" + id;
+    }
+
     @PostMapping("/{id}/status")
     public String updateStatus(@PathVariable Long id, @RequestParam TaskStatus status) {
         taskService.updateStatus(id, status);
         return "redirect:/tasks/" + id;
+    }
+
+    @PostMapping("/{id}/delete")
+    public String delete(@PathVariable Long id) {
+        taskService.delete(id);
+        return "redirect:/tasks";
     }
 
     @ExceptionHandler(TaskNotFoundException.class)
