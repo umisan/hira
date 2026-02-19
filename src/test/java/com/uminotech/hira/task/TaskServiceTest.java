@@ -94,6 +94,50 @@ class TaskServiceTest {
     }
 
     @Test
+    void shouldUpdateTaskFields() {
+        TaskService service = new TaskService(taskRepository);
+        Task before = task(10L, TaskStatus.TODO, 1L);
+        when(taskRepository.findById(10L)).thenReturn(Optional.of(before));
+        TaskUpdateCommand command = new TaskUpdateCommand(
+                "updated-title",
+                "updated-desc",
+                TaskPriority.HIGH,
+                5,
+                TaskStatus.IN_PROGRESS,
+                LocalDate.of(2026, 3, 1),
+                2L);
+        Task after = new Task(
+                before.id(),
+                command.title(),
+                command.description(),
+                command.priority(),
+                command.weight(),
+                command.status(),
+                command.dueDate(),
+                command.assigneeId(),
+                before.createdAt(),
+                before.updatedAt());
+        when(taskRepository.save(after)).thenReturn(after);
+
+        Task actual = service.update(10L, command);
+
+        assertThat(actual.title()).isEqualTo("updated-title");
+        assertThat(actual.status()).isEqualTo(TaskStatus.IN_PROGRESS);
+        verify(taskRepository).save(after);
+    }
+
+    @Test
+    void shouldDeleteTask() {
+        TaskService service = new TaskService(taskRepository);
+        Task before = task(10L, TaskStatus.TODO, 1L);
+        when(taskRepository.findById(10L)).thenReturn(Optional.of(before));
+
+        service.delete(10L);
+
+        verify(taskRepository).delete(before);
+    }
+
+    @Test
     void shouldThrowWhenTaskNotFound() {
         TaskService service = new TaskService(taskRepository);
         when(taskRepository.findById(404L)).thenReturn(Optional.empty());

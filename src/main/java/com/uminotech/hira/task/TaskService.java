@@ -55,4 +55,24 @@ public class TaskService {
                 before.updatedAt());
         return taskRepository.save(after);
     }
+
+    public Task update(Long id, TaskUpdateCommand command) {
+        Task before = findById(id);
+        Task after = new Task(
+                before.id(),
+                command.title(),
+                command.description(),
+                command.priority(),
+                command.weight(),
+                command.status(),
+                command.dueDate(),
+                command.assigneeId(),
+                before.createdAt(),
+                before.updatedAt());
+        return taskRepository.save(after);
+    }
+
+    public void delete(Long id) {
+        taskRepository.delete(findById(id));
+    }
 }

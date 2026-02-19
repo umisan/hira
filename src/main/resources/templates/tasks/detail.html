@@ -34,6 +34,12 @@
     <button type="submit">更新</button>
 </form>
 
+<p><a th:href="@{/tasks/{id}/edit(id=${task.id})}">編集する</a></p>
+
+<form method="post" th:action="@{/tasks/{id}/delete(id=${task.id})}">
+    <button type="submit">削除する</button>
+</form>
+
 <p><a th:href="@{/tasks}">一覧へ戻る</a></p>
 </body>
 </html>
