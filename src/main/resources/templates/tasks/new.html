@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>タスク登録</title>
+</head>
+<body>
+<h1>タスク登録</h1>
+
+<form method="post" th:action="@{/tasks}" th:object="${form}">
+    <div>
+        <label for="title">タイトル</label>
+        <input id="title" type="text" th:field="*{title}">
+    </div>
+    <div>
+        <label for="description">説明</label>
+        <textarea id="description" th:field="*{description}"></textarea>
+    </div>
+    <div>
+        <label for="priority">優先度</label>
+        <select id="priority" th:field="*{priority}">
+            <option value="LOW">LOW</option>
+            <option value="MEDIUM">MEDIUM</option>
+            <option value="HIGH">HIGH</option>
+        </select>
+    </div>
+    <div>
+        <label for="weight">重さ</label>
+        <input id="weight" type="number" min="1" max="5" th:field="*{weight}">
+    </div>
+    <div>
+        <label for="dueDate">期限</label>
+        <input id="dueDate" type="date" th:field="*{dueDate}">
+    </div>
+    <div>
+        <label for="assigneeId">担当者</label>
+        <select id="assigneeId" th:field="*{assigneeId}">
+            <option value="">未設定</option>
+            <option th:each="member : ${members}"
+                    th:value="${member.id}"
+                    th:text="${member.name}"></option>
+        </select>
+    </div>
+    <button type="submit">登録</button>
+</form>
+
+<p><a th:href="@{/tasks}">一覧へ戻る</a></p>
+</body>
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>タスク詳細</title>
+</head>
+<body>
+<h1 th:text="${task.title}">task title</h1>
+
+<dl>
+    <dt>ID</dt>
+    <dd th:text="${task.id}">1</dd>
+    <dt>説明</dt>
+    <dd th:text="${task.description}">desc</dd>
+    <dt>優先度</dt>
+    <dd th:text="${task.priority}">MEDIUM</dd>
+    <dt>重さ</dt>
+    <dd th:text="${task.weight}">2</dd>
+    <dt>ステータス</dt>
+    <dd th:text="${task.status}">TODO</dd>
+    <dt>期限</dt>
+    <dd th:text="${task.dueDate}">2026-02-20</dd>
+</dl>
+
+<form method="post" th:action="@{/tasks/{id}/status(id=${task.id})}">
+    <label for="status">ステータス更新</label>
+    <select id="status" name="status">
+        <option th:each="status : ${statuses}"
+                th:value="${status}"
+                th:text="${status}"
+                th:selected="${status} == ${task.status}"></option>
+    </select>
+    <button type="submit">更新</button>
+</form>
+
+<p><a th:href="@{/tasks}">一覧へ戻る</a></p>
+</body>
+</html>
